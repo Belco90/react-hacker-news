@@ -15,10 +15,18 @@
     "react-scripts": "3.4.1",
     "typescript": "~3.7.2"
   },
+  "devDependencies": {
+    "husky": "^4.2.5",
+    "prettier": "2.0.5",
+    "pretty-quick": "^2.0.1"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "prettier": "prettier --ignore-path .gitignore \"./**/*.{js,jsx,ts,tsx}\"",
+    "format": "yarn prettier --write",
+    "format:check": "yarn prettier --check",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -35,5 +43,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
