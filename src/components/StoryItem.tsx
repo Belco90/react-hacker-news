@@ -1,23 +1,8 @@
 import React from 'react';
 import { Box, Link, Stack, Text } from '@chakra-ui/core';
-import { HACKER_NEWS_URI } from '../global-constants';
 import { HackerNewsStory } from '../models';
-
-const fetchItem = async (id: number) => {
-  const resp = await fetch(`${HACKER_NEWS_URI}/item/${id}.json`);
-
-  if (resp.ok) {
-    const data = await resp.json();
-    return data;
-  }
-
-  throw new Error('Something went wrong fetching latest stories');
-};
-
-const getTimeDisplay = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000);
-  return date.toLocaleString();
-};
+import { readItem } from '../api';
+import { getTimeDisplay } from '../utilities';
 
 type Props = {
   id: number;
@@ -28,7 +13,7 @@ const StoryItem: React.FC<Props> = ({ id, ...props }) => {
 
   React.useEffect(() => {
     const retrieveStoryItem = async () => {
-      const data = await fetchItem(id);
+      const data = await readItem(id);
       setStory(data);
     };
 
