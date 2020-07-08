@@ -27,6 +27,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "preserve": "yarn build",
+    "serve": "serve -s build",
     "test": "react-scripts test",
     "prettier": "prettier --ignore-path .gitignore \"./**/*.{js,jsx,ts,tsx}\"",
     "format": "yarn prettier --write",
