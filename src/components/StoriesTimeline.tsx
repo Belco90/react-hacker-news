@@ -27,6 +27,7 @@ const StoriesTimeline = () => {
     };
 
     retrieveStoriesIds();
+    // eslint-disable-next-line
   }, []);
 
   const loadMoreStories = () => {
