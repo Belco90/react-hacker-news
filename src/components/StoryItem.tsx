@@ -20,6 +20,7 @@ const StoryItem: React.FC<Props> = ({ id, ...props }) => {
     };
 
     retrieveStoryItem();
+    // eslint-disable-next-line
   }, []);
 
   return (
