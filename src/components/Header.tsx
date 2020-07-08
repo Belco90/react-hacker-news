@@ -13,6 +13,9 @@ const Header = () => {
     >
       <Container>
         <Heading as="h1" size="xl">
+          <span role="img" aria-label="Laptop">
+            💻
+          </span>{' '}
           Hacker News
         </Heading>
       </Container>
