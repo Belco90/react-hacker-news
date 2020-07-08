@@ -26,7 +26,10 @@ const StoryItem: React.FC<Props> = ({ id, ...props }) => {
     <Box p={5} shadow="md" borderWidth="1px" {...props}>
       <Stack spacing={4}>
         <Box fontWeight="semibold">
-          <Skeleton isLoaded={!isLoading} width={isLoading ? '40%' : 'full'}>
+          <Skeleton
+            isLoaded={!isLoading}
+            width={isLoading ? { base: '80%', md: '40%' } : 'full'}
+          >
             {story ? (
               <Link href={story.url}>{story.title}</Link>
             ) : (
@@ -35,7 +38,10 @@ const StoryItem: React.FC<Props> = ({ id, ...props }) => {
           </Skeleton>
         </Box>
         <Box borderLeftWidth="2px" paddingLeft={2}>
-          <Skeleton isLoaded={!isLoading} width={isLoading ? '20%' : 'full'}>
+          <Skeleton
+            isLoaded={!isLoading}
+            width={isLoading ? { base: '40%', md: '20%' } : 'full'}
+          >
             <Text fontSize="sm" color="gray.500">
               By {story?.by || 'Unknown'} at{' '}
               {story ? getTimeDisplay(story.time) : '?'}
