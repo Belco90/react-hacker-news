@@ -5,6 +5,17 @@ import { readStoriesIndex } from '../api';
 
 const CHUNK_SIZE = 30;
 
+const fakeFetch = async () => {
+  console.log('fakeFetch req');
+  const resp = await fetch('/foo');
+
+  if (resp.ok) {
+    console.log('fakeFetch success');
+  } else {
+    console.log('fakeFetch error');
+  }
+};
+
 const StoriesTimeline = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [storiesIds, setStoriesIds] = React.useState<number[]>([]);
@@ -61,7 +72,7 @@ const StoriesTimeline = () => {
   return (
     <Box my={8}>
       <Heading as="h2" size="lg" mb={4}>
-        Latest Stories
+        Latest Stories <Button onClick={fakeFetch}>Fake fetch</Button>
       </Heading>
 
       <Stack spacing={2}>
