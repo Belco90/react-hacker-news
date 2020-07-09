@@ -1,5 +1,7 @@
 import React from 'react';
-import { Box, Button, Heading, Spinner, Stack, Text } from '@chakra-ui/core';
+import { Box, Heading, Spinner, Stack, Text } from '@chakra-ui/core';
+import { Waypoint } from 'react-waypoint';
+
 import StoryItem from './StoryItem';
 import { readStoriesIndex } from '../api';
 import { useConnectivityStatus } from '../contexts/connectivity-status';
@@ -17,6 +19,22 @@ const StoriesTimeline = () => {
   const { current: pagination } = React.useRef<PaginationData>({ cursor: 0 });
   const connectivityStatus = useConnectivityStatus();
 
+  const loadMoreStories = () => {
+    if (canLoadMore) {
+      const nextStoriesIdsSlice = storiesIds.slice(
+        pagination.cursor,
+        pagination.cursor + CHUNK_SIZE
+      );
+
+      const newScrollStoriesIds = [...scrollStoriesIds, ...nextStoriesIdsSlice];
+
+      pagination.cursor = newScrollStoriesIds.length;
+      setCanLoadMore(newScrollStoriesIds.length < storiesIds.length);
+
+      setScrollStoriesIds(newScrollStoriesIds);
+    }
+  };
+
   React.useEffect(() => {
     const retrieveStoriesIds = async () => {
       const data = await readStoriesIndex(connectivityStatus === 'online');
@@ -32,20 +50,6 @@ const StoriesTimeline = () => {
     retrieveStoriesIds();
     // eslint-disable-next-line
   }, []);
-
-  const loadMoreStories = () => {
-    const nextStoriesIdsSlice = storiesIds.slice(
-      pagination.cursor,
-      pagination.cursor + CHUNK_SIZE
-    );
-
-    const newScrollStoriesIds = [...scrollStoriesIds, ...nextStoriesIdsSlice];
-
-    pagination.cursor = newScrollStoriesIds.length;
-    setCanLoadMore(newScrollStoriesIds.length < storiesIds.length);
-
-    setScrollStoriesIds(newScrollStoriesIds);
-  };
 
   if (isLoading) {
     return (
@@ -73,17 +77,15 @@ const StoriesTimeline = () => {
         ))}
       </Stack>
 
-      <Box mt={5} display="flex" justifyContent="center">
-        {canLoadMore ? (
-          <Button onClick={loadMoreStories} variantColor="brand">
-            Load more
-          </Button>
-        ) : (
-          <Text as="em" mx="auto" color="gray.500">
-            No more news :(
-          </Text>
-        )}
-      </Box>
+      <Waypoint onEnter={loadMoreStories}>
+        <Box mt={5} display="flex" justifyContent="center">
+          {!canLoadMore && !isLoading && (
+            <Text as="em" mx="auto" color="gray.500">
+              No more news :(
+            </Text>
+          )}
+        </Box>
+      </Waypoint>
     </Box>
   );
 };
