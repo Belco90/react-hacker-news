@@ -1,8 +1,11 @@
 import React from 'react';
-import { Box, Heading } from '@chakra-ui/core';
+import { Box, Flex, Heading, Text } from '@chakra-ui/core';
 import Container from './Container';
+import { useConnectivityStatus } from '../contexts/connectivity-status';
 
 const Header = () => {
+  const connectivityStatus = useConnectivityStatus();
+
   return (
     <Box
       as="header"
@@ -12,12 +15,17 @@ const Header = () => {
       color="gray.50"
     >
       <Container>
-        <Heading as="h1" size="xl">
-          <span role="img" aria-label="Laptop">
-            💻
-          </span>{' '}
-          Hacker News
-        </Heading>
+        <Flex alignItems="center" justifyContent="space-between">
+          <Heading as="h1" size="xl">
+            <span role="img" aria-label="Laptop">
+              💻
+            </span>{' '}
+            Hacker News
+          </Heading>
+          <Text as="span" fontSize="sm" fontWeight="normal">
+            {connectivityStatus}
+          </Text>
+        </Flex>
       </Container>
     </Box>
   );
