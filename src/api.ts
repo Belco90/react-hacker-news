@@ -6,9 +6,9 @@ const DEFAULT_FETCH_OPTION: RequestInit = {
     Accept: 'application/json',
   },
 };
+const EXPIRY_SECONDS = 5 * 60; // 5 min default
 
-const cachedFetch = (url: string) => {
-  const expiry = 5 * 60; // 5 min default
+const cachedFetch = (url: string, isOnline: boolean = true) => {
   const cacheKey = url;
   const cached = localStorage.getItem(cacheKey);
   const whenCached = localStorage.getItem(cacheKey + ':ts');
@@ -17,8 +17,8 @@ const cachedFetch = (url: string) => {
     // it was in sessionStorage
     const age = (Date.now() - Number(whenCached)) / 1000;
 
-    // TODO: check if offline to return cached value too
-    if (age < expiry) {
+    // Return cached value if offline or not expired
+    if (!isOnline || age < EXPIRY_SECONDS) {
       const response = JSON.parse(cached);
       return Promise.resolve(response);
     } else {
@@ -30,9 +30,6 @@ const cachedFetch = (url: string) => {
 
   return fetch(url, DEFAULT_FETCH_OPTION).then((response) => {
     if (response.ok) {
-      // There is a .json() instead of .text() but
-      // we're going to store it in sessionStorage as
-      // string anyway.
       // If we don't clone the response, it will be
       // consumed by the time it's returned. This
       // way we're being un-intrusive.
@@ -48,10 +45,10 @@ const cachedFetch = (url: string) => {
   });
 };
 
-export const readStoriesIndex = async () => {
-  return cachedFetch(`${HACKER_NEWS_URI}/newstories.json`);
+export const readStoriesIndex = async (isOnline: boolean = true) => {
+  return cachedFetch(`${HACKER_NEWS_URI}/newstories.json`, isOnline);
 };
 
-export const readItem = async (id: number) => {
-  return cachedFetch(`${HACKER_NEWS_URI}/item/${id}.json`);
+export const readItem = async (id: number, isOnline: boolean = true) => {
+  return cachedFetch(`${HACKER_NEWS_URI}/item/${id}.json`, isOnline);
 };

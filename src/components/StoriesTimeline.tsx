@@ -2,21 +2,24 @@ import React from 'react';
 import { Box, Button, Heading, Spinner, Stack, Text } from '@chakra-ui/core';
 import StoryItem from './StoryItem';
 import { readStoriesIndex } from '../api';
+import { useConnectivityStatus } from '../contexts/connectivity-status';
 
 const CHUNK_SIZE = 30;
+type PaginationData = {
+  cursor: number;
+};
 
 const StoriesTimeline = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [storiesIds, setStoriesIds] = React.useState<number[]>([]);
   const [scrollStoriesIds, setScrollStoriesIds] = React.useState<number[]>([]);
   const [canLoadMore, setCanLoadMore] = React.useState<boolean>(false);
-  const { current: pagination } = React.useRef<{
-    cursor: number;
-  }>({ cursor: 0 });
+  const { current: pagination } = React.useRef<PaginationData>({ cursor: 0 });
+  const connectivityStatus = useConnectivityStatus();
 
   React.useEffect(() => {
     const retrieveStoriesIds = async () => {
-      const data = await readStoriesIndex();
+      const data = await readStoriesIndex(connectivityStatus === 'online');
       setStoriesIds(data);
       setIsLoading(false);
 
