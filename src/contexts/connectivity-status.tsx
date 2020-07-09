@@ -3,7 +3,7 @@ import React from 'react';
 type ConnectivityStatus = 'online' | 'offline';
 
 const ConnectivityStatusContext = React.createContext<ConnectivityStatus>(
-  'online'
+  'offline'
 );
 
 const ConnectivityStatusProvider: React.FC = ({ children }) => {
