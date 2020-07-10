@@ -19,7 +19,7 @@ const cachedFetch = (url: string) => {
     const age = (Date.now() - Number(whenCached)) / 1000;
 
     // Return cached value if offline or not expired
-    if (!isOnline && age < EXPIRY_SECONDS) {
+    if (!isOnline || age < EXPIRY_SECONDS) {
       const response = JSON.parse(cached);
       return Promise.resolve(response);
     } else {
