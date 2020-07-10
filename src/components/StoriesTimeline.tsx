@@ -4,7 +4,6 @@ import { Waypoint } from 'react-waypoint';
 
 import StoryItem from './StoryItem';
 import { readStoriesIndex } from '../api';
-import { useConnectivityStatus } from '../contexts/connectivity-status';
 
 const CHUNK_SIZE = 30;
 type PaginationData = {
@@ -17,7 +16,6 @@ const StoriesTimeline = () => {
   const [scrollStoriesIds, setScrollStoriesIds] = React.useState<number[]>([]);
   const [canLoadMore, setCanLoadMore] = React.useState<boolean>(false);
   const { current: pagination } = React.useRef<PaginationData>({ cursor: 0 });
-  const connectivityStatus = useConnectivityStatus();
 
   const loadMoreStories = () => {
     if (canLoadMore) {
@@ -37,7 +35,7 @@ const StoriesTimeline = () => {
 
   React.useEffect(() => {
     const retrieveStoriesIds = async () => {
-      const data = await readStoriesIndex(connectivityStatus === 'online');
+      const data = await readStoriesIndex();
       setStoriesIds(data);
       setIsLoading(false);
 

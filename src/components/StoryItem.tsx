@@ -3,7 +3,6 @@ import { Box, Link, Skeleton, Stack, Text } from '@chakra-ui/core';
 import { HackerNewsStory } from '../models';
 import { readItem } from '../api';
 import { getTimeDisplay } from '../utilities';
-import { useConnectivityStatus } from '../contexts/connectivity-status';
 
 type Props = {
   id: number;
@@ -12,11 +11,10 @@ type Props = {
 const StoryItem: React.FC<Props> = ({ id, ...props }) => {
   const [story, setStory] = React.useState<HackerNewsStory | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
-  const connectivityStatus = useConnectivityStatus();
 
   React.useEffect(() => {
     const retrieveStoryItem = async () => {
-      const data = await readItem(id, connectivityStatus === 'online');
+      const data = await readItem(id);
       setStory(data);
       setIsLoading(false);
     };

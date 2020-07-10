@@ -8,17 +8,18 @@ const DEFAULT_FETCH_OPTION: RequestInit = {
 };
 const EXPIRY_SECONDS = 5 * 60; // 5 min default
 
-const cachedFetch = (url: string, isOnline: boolean = true) => {
+const cachedFetch = (url: string) => {
   const cacheKey = url;
   const cached = localStorage.getItem(cacheKey);
   const whenCached = localStorage.getItem(cacheKey + ':ts');
+  const isOnline = window.navigator.onLine;
 
   if (cached !== null && whenCached !== null) {
     // it was in sessionStorage
     const age = (Date.now() - Number(whenCached)) / 1000;
 
     // Return cached value if offline or not expired
-    if (!isOnline || age < EXPIRY_SECONDS) {
+    if (!isOnline && age < EXPIRY_SECONDS) {
       const response = JSON.parse(cached);
       return Promise.resolve(response);
     } else {
@@ -40,15 +41,17 @@ const cachedFetch = (url: string, isOnline: boolean = true) => {
           localStorage.setItem(cacheKey, content);
           localStorage.setItem(cacheKey + ':ts', String(Date.now()));
         });
+      return response.json();
     }
-    return response.json();
+
+    throw new Error(`Something went wrong fetching "${url}"`);
   });
 };
 
-export const readStoriesIndex = async (isOnline: boolean = true) => {
-  return cachedFetch(`${HACKER_NEWS_URI}/newstories.json`, isOnline);
+export const readStoriesIndex = async () => {
+  return cachedFetch(`${HACKER_NEWS_URI}/newstories.json`);
 };
 
-export const readItem = async (id: number, isOnline: boolean = true) => {
-  return cachedFetch(`${HACKER_NEWS_URI}/item/${id}.json`, isOnline);
+export const readItem = async (id: number) => {
+  return cachedFetch(`${HACKER_NEWS_URI}/item/${id}.json`);
 };
