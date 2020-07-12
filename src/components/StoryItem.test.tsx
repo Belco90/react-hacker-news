@@ -56,18 +56,18 @@ it('should render story details', async () => {
 it('should render empty story', async () => {
   server.use(
     rest.get(
-      'https://hacker-news.firebaseio.com/v0/item/50.json',
+      'https://hacker-news.firebaseio.com/v0/item/17.json',
       (req, res, ctx) => {
         return res(
           ctx.json({
-            id: 50,
+            id: 17,
           })
         );
       }
     )
   );
 
-  render(<StoryItem id={50} />);
+  render(<StoryItem id={17} />);
 
   expect(screen.queryByText('Best Hacker News Story')).not.toBeInTheDocument();
   expect(screen.getByText(/loading story/i)).toBeInTheDocument();
@@ -82,14 +82,14 @@ it('should render empty story', async () => {
 it('should handle server error', async () => {
   server.use(
     rest.get(
-      'https://hacker-news.firebaseio.com/v0/item/99.json',
+      'https://hacker-news.firebaseio.com/v0/item/17.json',
       (req, res, ctx) => {
         return res(ctx.status(500));
       }
     )
   );
 
-  render(<StoryItem id={99} />);
+  render(<StoryItem id={17} />);
 
   const loadingElement = screen.getByText(/loading story/i);
   expect(loadingElement).toBeInTheDocument();
@@ -97,6 +97,6 @@ it('should handle server error', async () => {
 
   await waitForElementToBeRemoved(loadingElement);
 
-  expect(screen.getByText(/error loading story 99/i)).toBeInTheDocument();
+  expect(screen.getByText(/error loading story 17/i)).toBeInTheDocument();
   expect(screen.queryByText('Best Hacker News Story')).not.toBeInTheDocument();
 });
