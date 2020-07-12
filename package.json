@@ -30,12 +30,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "preserve": "npm build",
+    "preserve": "npm run build",
     "serve": "serve -s build",
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
     "prettier": "prettier --ignore-path .gitignore \"./**/*.{js,jsx,ts,tsx}\"",
-    "format": "npm prettier --write",
-    "format:check": "npm prettier --check",
+    "format": "npm run prettier --write",
+    "format:check": "npm run prettier --check",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
