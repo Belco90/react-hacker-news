@@ -1,10 +1,10 @@
 /**  * @jest-environment jsdom-sixteen  */
 import React from 'react';
-import { render, screen, waitForElementToBeRemoved } from '../../test-utils';
+import { render, screen, waitForElementToBeRemoved } from '../test-utils';
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
 
-import StoryItem from '../../components/StoryItem';
+import StoryItem from './StoryItem';
 
 const server = setupServer(
   rest.get(
