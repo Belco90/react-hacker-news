@@ -1,17 +1,11 @@
 /**  * @jest-environment jsdom-sixteen  */
 import React from 'react';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-  waitFor,
-} from './test-utils';
+import { render, screen, waitForElementToBeRemoved } from './test-utils';
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
 
 import App from './App';
 import { HackerNewsStory } from './models';
-import { readItem, readStoriesIndex } from './api';
 
 const getFakeStory = (id: number): HackerNewsStory => ({
   id: id,
