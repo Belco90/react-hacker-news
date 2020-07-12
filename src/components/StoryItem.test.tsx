@@ -48,7 +48,7 @@ it('should render story details', async () => {
   expect(storyTitle).toBeInTheDocument();
   expect(storyTitle).toHaveAttribute('href', 'https://mario.dev');
   expect(
-    screen.getByText('By John Doe at 7/12/2020, 10:09:11 AM')
+    screen.getByText('By John Doe at Sun, 12 Jul 2020 08:09:11 GMT')
   ).toBeInTheDocument();
   expect(screen.queryByText(/loading story/i)).not.toBeInTheDocument();
 });
