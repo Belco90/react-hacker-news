@@ -28,12 +28,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "preserve": "yarn build",
+    "preserve": "npm build",
     "serve": "serve -s build",
     "test": "react-scripts test",
     "prettier": "prettier --ignore-path .gitignore \"./**/*.{js,jsx,ts,tsx}\"",
-    "format": "yarn prettier --write",
-    "format:check": "yarn prettier --check",
+    "format": "npm prettier --write",
+    "format:check": "npm prettier --check",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
