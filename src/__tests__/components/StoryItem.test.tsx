@@ -1,16 +1,10 @@
 /**  * @jest-environment jsdom-sixteen  */
 import React from 'react';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved } from '../../test-utils';
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
 
 import StoryItem from '../../components/StoryItem';
-import customTheme from '../../custom-theme';
-import { ThemeProvider } from '@chakra-ui/core';
 
 const server = setupServer(
   rest.get(
@@ -32,14 +26,6 @@ const server = setupServer(
   )
 );
 
-const setUp = (props: any) => {
-  return render(
-    <ThemeProvider theme={customTheme}>
-      <StoryItem {...props} />
-    </ThemeProvider>
-  );
-};
-
 beforeAll(() => {
   server.listen();
 });
@@ -53,7 +39,7 @@ afterAll(() => {
 });
 
 it('should render story details', async () => {
-  setUp({ id: 17 });
+  render(<StoryItem id={17} />);
 
   expect(screen.queryByText('Best Hacker News Story')).not.toBeInTheDocument();
   expect(screen.getByText(/loading story/i)).toBeInTheDocument();
@@ -81,7 +67,7 @@ it('should render empty story', async () => {
     )
   );
 
-  setUp({ id: 50 });
+  render(<StoryItem id={50} />);
 
   expect(screen.queryByText('Best Hacker News Story')).not.toBeInTheDocument();
   expect(screen.getByText(/loading story/i)).toBeInTheDocument();
@@ -103,7 +89,7 @@ it('should handle server error', async () => {
     )
   );
 
-  setUp({ id: 99 });
+  render(<StoryItem id={99} />);
 
   const loadingElement = screen.getByText(/loading story/i);
   expect(loadingElement).toBeInTheDocument();
