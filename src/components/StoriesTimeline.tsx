@@ -12,6 +12,7 @@ type PaginationData = {
 
 const StoriesTimeline = () => {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [isError, setIsError] = React.useState<boolean>(false);
   const [storiesIds, setStoriesIds] = React.useState<number[]>([]);
   const [scrollStoriesIds, setScrollStoriesIds] = React.useState<number[]>([]);
   const [canLoadMore, setCanLoadMore] = React.useState<boolean>(false);
@@ -35,14 +36,18 @@ const StoriesTimeline = () => {
 
   React.useEffect(() => {
     const retrieveStoriesIds = async () => {
-      const data = await readStoriesIndex();
-      setStoriesIds(data);
-      setIsLoading(false);
+      try {
+        const data = await readStoriesIndex();
+        setStoriesIds(data);
 
-      const firstPagination = data.slice(0, CHUNK_SIZE);
-      setScrollStoriesIds(firstPagination);
-      pagination.cursor = firstPagination.length;
-      setCanLoadMore(firstPagination.length < data.length);
+        const firstPagination = data.slice(0, CHUNK_SIZE);
+        setScrollStoriesIds(firstPagination);
+        pagination.cursor = firstPagination.length;
+        setCanLoadMore(firstPagination.length < data.length);
+      } catch (e) {
+        setIsError(true);
+      }
+      setIsLoading(false);
     };
 
     retrieveStoriesIds();
@@ -69,21 +74,27 @@ const StoriesTimeline = () => {
         Latest Stories
       </Heading>
 
-      <Stack spacing={2}>
-        {scrollStoriesIds.map((storyId) => (
-          <StoryItem key={storyId} id={storyId} />
-        ))}
-      </Stack>
+      {isError ? (
+        <Box>Something went wrong retrieving new stories</Box>
+      ) : (
+        <>
+          <Stack spacing={2}>
+            {scrollStoriesIds.map((storyId) => (
+              <StoryItem key={storyId} id={storyId} />
+            ))}
+          </Stack>
 
-      <Waypoint onEnter={loadMoreStories}>
-        <Box mt={5} display="flex" justifyContent="center">
-          {!canLoadMore && !isLoading && (
-            <Text as="em" mx="auto" color="gray.500">
-              No more news :(
-            </Text>
-          )}
-        </Box>
-      </Waypoint>
+          <Waypoint onEnter={loadMoreStories}>
+            <Box mt={5} display="flex" justifyContent="center">
+              {!canLoadMore && !isLoading && (
+                <Text as="em" mx="auto" color="gray.500">
+                  No more news :(
+                </Text>
+              )}
+            </Box>
+          </Waypoint>
+        </>
+      )}
     </Box>
   );
 };
