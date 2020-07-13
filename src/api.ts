@@ -7,11 +7,10 @@ const DEFAULT_FETCH_OPTION: RequestInit = {
   },
 };
 
-const cachedFetch = (url: string) => {
+export const cachedFetch = (url: string) => {
   const cacheKey = url;
   const cached = localStorage.getItem(cacheKey);
-  const whenCached = localStorage.getItem(cacheKey + ':ts');
-  const hasCacheMatch = cached !== null && whenCached !== null;
+  const hasCacheMatch = cached !== null;
 
   return fetch(url, DEFAULT_FETCH_OPTION)
     .then((response) => {
@@ -22,15 +21,8 @@ const cachedFetch = (url: string) => {
           .clone()
           .text()
           .then((content) => {
-            // save new cache result
+            // save new cache result (or replaced previous one)
             localStorage.setItem(cacheKey, content);
-            localStorage.setItem(cacheKey + ':ts', String(Date.now()));
-
-            // if there was previous cache result, delete it
-            if (hasCacheMatch) {
-              localStorage.removeItem(cacheKey);
-              localStorage.removeItem(cacheKey + ':ts');
-            }
           });
         return response.json();
       } else if (hasCacheMatch) {
