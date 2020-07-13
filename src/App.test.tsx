@@ -75,9 +75,10 @@ it('should render newest stories', async () => {
   expect(title3).toBeInTheDocument();
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+  expect(screen.getByText(/no more stories/i)).toBeInTheDocument();
 });
 
-it('should render previous stories if offline', async () => {
+it('should render previously cached stories if offline', async () => {
   // render app first time to cache stories
   const { unmount } = render(<App />);
 
@@ -88,8 +89,7 @@ it('should render previous stories if offline', async () => {
   // unmount current app to re-mount it later and force reading stories again
   unmount();
 
-  // force error on api to prove it's using cache instead of performing new requests,
-  // including some mocks calls as extra proof
+  // force error on api to simulate the network isn't available
   const anyRequestMock = jest.fn();
   server.use(
     rest.get(
@@ -101,6 +101,20 @@ it('should render previous stories if offline', async () => {
     ),
     rest.get(
       'https://hacker-news.firebaseio.com/v0/item/1.json',
+      (req, res, ctx) => {
+        anyRequestMock();
+        return res(ctx.status(500));
+      }
+    ),
+    rest.get(
+      'https://hacker-news.firebaseio.com/v0/item/2.json',
+      (req, res, ctx) => {
+        anyRequestMock();
+        return res(ctx.status(500));
+      }
+    ),
+    rest.get(
+      'https://hacker-news.firebaseio.com/v0/item/3.json',
       (req, res, ctx) => {
         anyRequestMock();
         return res(ctx.status(500));
@@ -121,7 +135,7 @@ it('should render previous stories if offline', async () => {
   expect(title3).toBeInTheDocument();
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-  expect(anyRequestMock).not.toHaveBeenCalled();
+  expect(anyRequestMock).toHaveBeenCalled(); // proving that error requests were called
 });
 
 it('should handle server error retrieving the newest stories', async () => {

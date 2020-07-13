@@ -88,7 +88,7 @@ const StoriesTimeline = () => {
             <Box mt={5} display="flex" justifyContent="center">
               {!canLoadMore && !isLoading && (
                 <Text as="em" mx="auto" color="gray.500">
-                  No more news :(
+                  No more stories :(
                 </Text>
               )}
             </Box>
